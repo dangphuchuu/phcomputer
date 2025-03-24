@@ -6,6 +6,7 @@ use App\Http\Controllers\BannersFeaturedController;
 use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\ChatsController;
 use App\Http\Controllers\DiscountsController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\OrdersController;
@@ -119,6 +120,14 @@ Route::prefix('admin')->middleware('admin', 'role:admin|staff')->group(function 
         Route::get('/status', [DiscountsController::class, 'status']);
     });
 
+    Route::prefix('chats')->group(function(){
+        Route::get('/',[AdminController::class, 'chats'])->name('admin.chats');
+    });
+
+    Route::get('/admin/fetch-messages', [ChatsController::class, 'fetchMessages'])->name('admin.fetchMessages');
+    Route::post('/admin/send-message', [ChatsController::class, 'sendMessage'])->name('admin.sendMessage');
+
+    
     Route::get('/filter-by-date', [AdminController::class, 'filter_by_date']);
     Route::get('/sort-by', [AdminController::class, 'sort_by']);
     Route::get('/profile', [AdminController::class, 'profile']);

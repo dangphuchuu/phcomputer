@@ -22,7 +22,11 @@
                     <!--/main-menu -->
                 </nav>
                 <div class="col-xl-3 col-lg-2 d-lg-flex align-items-center justify-content-end text-end">
-                <a class="phone_top" href="tel://{{isset($info->phone) ? $info->phone : ''}}"><strong><span>{{__("Contact")}}</span>+{{isset($info->phone) ? $info->phone : ''}}</strong></a>
+                <a class="phone_top" href="/build">
+                        <strong>
+                            <i class="ti-desktop" style="margin-right: 12px;font-size: 22px;"></i>{{__("Build PC")}}
+                        </strong>
+                    </a>
                 <a href="{{route('lang')}}" class="nav-link nav-link-lg nav-link-user">
                     <div class="d-lg-inline-block">
                     @if(Session("language") == "en")
@@ -168,6 +172,9 @@
                                         </li>
                                         <li>
                                             <a href="/trackOrder"><i class="ti-truck"></i>{{__("Track your Order")}}</a>
+                                        </li>
+                                        <li>
+                                            <a href="/chats"><i class="ti-themify-favicon"></i>{{__("Chat")}}</a>
                                         </li>
                                         <li>
                                             <a href="/logout"><i class="ti-shift-right"></i>{{__("Logout")}}</a>

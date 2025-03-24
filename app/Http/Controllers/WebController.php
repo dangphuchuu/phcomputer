@@ -25,6 +25,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use PDO;
+use Illuminate\Support\Facades\Session;
 
 class WebController extends Controller
 {
@@ -94,6 +95,10 @@ class WebController extends Controller
                 session()->forget('username_client');
                 session()->forget('password_client');
             }
+            session([
+                'LoggedUserInfo' => Auth::user()->id,
+                'LoggedUserName' => Auth::user()->name,
+            ]);
             toast(__("Login Successfully"), 'success');
             return redirect(session()->get('previous_url'));
         } else {
@@ -583,10 +588,10 @@ class WebController extends Controller
 
     public function trackOrder()
     {
-            $products = Products::all()->where('status', 1)->sortByDesc('created_at')->take(8);
-            return view('web.pages.account.track-order', [
-                'products' => $products
-            ]);
+        $products = Products::all()->where('status', 1)->sortByDesc('created_at')->take(8);
+        return view('web.pages.account.track-order', [
+            'products' => $products
+        ]);
     }
 
     //! Cart
@@ -843,5 +848,271 @@ class WebController extends Controller
                 'success' => 'Đơn hàng đã bị hủy !'
             ]);
         }
+    }
+    public function chats()
+    {
+        $userId = session('LoggedUserInfo');
+        $LoggedUserInfo = User::find($userId);
+
+        if (!$LoggedUserInfo) {
+            return redirect('/signin_signup');
+        }
+
+        // Retrieve all admins
+        $admins = User::role('admin')->get();
+
+        return view('web.pages.chats.index', [
+            'LoggedUserInfo' => $LoggedUserInfo,
+            'admins' => $admins // Pass only admins to the view
+        ]);
+    }
+    public function addCpu(Request $request)
+    {
+        Session::put('Cpu', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeCpu()
+    {
+        Session::forget('Cpu');
+        return redirect()->back();
+    }
+
+    public function addMainboard(Request $request)
+    {
+        Session::put('Mainboard', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeMainboard()
+    {
+        Session::forget('Mainboard');
+        return redirect()->back();
+    }
+
+    public function addVga(Request $request)
+    {
+        Session::put('Vga', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeVga()
+    {
+        Session::forget('Vga');
+        return redirect()->back();
+    }
+
+    public function addRam(Request $request)
+    {
+        Session::put('Ram', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeRam()
+    {
+        Session::forget('Ram');
+        return redirect()->back();
+    }
+
+    public function addHdd(Request $request)
+    {
+        Session::put('Hdd', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeHdd()
+    {
+        Session::forget('Hdd');
+        return redirect()->back();
+    }
+
+    public function addSsd(Request $request)
+    {
+        Session::put('Ssd', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeSsd()
+    {
+        Session::forget('Ssd');
+        return redirect()->back();
+    }
+
+    public function addPsu(Request $request)
+    {
+        Session::put('Psu', $request->products_id);
+        return redirect()->back();
+    }
+    public function removePsu()
+    {
+        Session::forget('Psu');
+        return redirect()->back();
+    }
+    public function addCase(Request $request)
+    {
+        Session::put('Case', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeCase()
+    {
+        Session::forget('Case');
+        return redirect()->back();
+    }
+    public function addFancase(Request $request)
+    {
+        Session::put('Fancase', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeFancase()
+    {
+        Session::forget('Fancase');
+        return redirect()->back();
+    }
+    public function addScreen(Request $request)
+    {
+        Session::put('Screen', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeScreen()
+    {
+        Session::forget('Screen');
+        return redirect()->back();
+    }
+    public function addMouse(Request $request)
+    {
+        Session::put('Mouse', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeMouse()
+    {
+        Session::forget('Mouse');
+        return redirect()->back();
+    }
+    public function addKeyboard(Request $request)
+    {
+        Session::put('Keyboard', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeKeyboard()
+    {
+        Session::forget('Keyboard');
+        return redirect()->back();
+    }
+    public function addHeadphone(Request $request)
+    {
+        Session::put('Headphone', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeHeadphone()
+    {
+        Session::forget('Headphone');
+        return redirect()->back();
+    }
+    public function addSoftware(Request $request)
+    {
+        Session::put('Software', $request->products_id);
+        return redirect()->back();
+    }
+    public function removeSoftware()
+    {
+        Session::forget('Software');
+        return redirect()->back();
+    }
+    public function removeAllSession()
+    {
+        Session::flush();
+        return redirect()->back();
+    }
+    public function buildPc()
+    {
+        $related = Products::Get()->take(4);
+        $products = Products::all()->where('status', 1);
+
+        $subMainboard = Subcategories::where('name', 'Mainboard')->first();
+        $allMainboard = Products::where('sub_id', $subMainboard->id)->where('status', 1)->get();
+
+        $subCpu = Subcategories::where('name', 'Cpu')->first();
+        $allCpu = Products::where('sub_id', $subCpu->id)->where('status', 1)->get();
+
+        $subVga = Subcategories::where('name', 'Vga')->first();
+        $allVga = Products::where('sub_id', $subVga->id)->where('status', 1)->get();
+
+        $subRam = Subcategories::where('name', 'Ram')->first();
+        $allRam = Products::where('sub_id', $subRam->id)->where('status', 1)->get();
+
+        $subSsd = Subcategories::where('name', 'Ssd')->first();
+        $allSsd = Products::where('sub_id', $subSsd->id)->where('status', 1)->get();
+
+        $subHdd = Subcategories::where('name', 'Hdd')->first();
+        $allHdd = Products::where('sub_id', $subHdd->id)->where('status', 1)->get();
+
+        $subPsu = Subcategories::where('name', 'Psu')->first();
+        $allPsu = Products::where('sub_id', $subPsu->id)->where('status', 1)->get();
+
+        $subCase = Subcategories::where('name', 'Case')->first();
+        $allCase = Products::where('sub_id', $subCase->id)->where('status', 1)->get();
+
+        $subFancase = Subcategories::where('name', 'Fancase')->first();
+        $allFancase = Products::where('sub_id', $subFancase->id)->where('status', 1)->get();
+
+        $subScreen = Subcategories::where('name', 'Screen')->first();
+        $allScreen = Products::where('sub_id', $subScreen->id)->where('status', 1)->get();
+
+        $subMouse = Subcategories::where('name', 'Mouse')->first();
+        $allMouse = Products::where('sub_id', $subMouse->id)->where('status', 1)->get();
+
+        $subKeyboard = Subcategories::where('name', 'Keyboard')->first();
+        $allKeyboard = Products::where('sub_id', $subKeyboard->id)->where('status', 1)->get();
+
+        $subHeadphone = Subcategories::where('name', 'Headphone')->first();
+        $allHeadphone = Products::where('sub_id', $subHeadphone->id)->where('status', 1)->get();
+
+        $subSoftware = Subcategories::where('name', 'Software')->first();
+        $allSoftware = Products::where('sub_id', $subSoftware->id)->where('status', 1)->get();
+
+
+
+        $cpu = Products::find(session('Cpu'));
+        $mainboard = Products::find(session('Mainboard'));
+        $vga = Products::find(session('Vga'));
+        $ram = Products::find(session('Ram'));
+        $ssd = Products::find(session('Ssd'));
+        $hdd = Products::find(session('Hdd'));
+        $psu = Products::find(session('Psu'));
+        $case = Products::find(session('Case'));
+        $fancase = Products::find(session('Fancase'));
+        $screen = Products::find(session('Screen'));
+        $mouse = Products::find(session('Mouse'));
+        $keyboard = Products::find(session('Keyboard'));
+        $headphone = Products::find(session('Headphone'));
+        $software = Products::find(session('Software'));
+
+
+        return view('web.pages.products.build', [
+            'related' => $related,
+            'products' => $products,
+            'cpu' => $cpu,
+            'mainboard' => $mainboard,
+            'vga' => $vga,
+            'ram' => $ram,
+            'ssd' => $ssd,
+            'hdd' => $hdd,
+            'psu' => $psu,
+            'case' => $case,
+            'fancase' => $fancase,
+            'screen' => $screen,
+            'mouse' => $mouse,
+            'keyboard' => $keyboard,
+            'headphone' => $headphone,
+            'software' => $software,
+            'allMainboard' => $allMainboard,
+            'allCpu' => $allCpu,
+            'allVga' => $allVga,
+            'allRam' => $allRam,
+            'allSsd' => $allSsd,
+            'allHdd' => $allHdd,
+            'allPsu' => $allPsu,
+            'allCase' => $allCase,
+            'allFancase' => $allFancase,
+            'allKeyboard' => $allKeyboard,
+            'allMouse' => $allMouse,
+            'allScreen' => $allScreen,
+            'allHeadphone' => $allHeadphone,
+            'allSoftware' => $allSoftware
+        ]);
     }
 }

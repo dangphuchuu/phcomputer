@@ -74,6 +74,12 @@
                     </a>
                 </li>
                 @endcan
+                <li class="sidebar-item @yield('manage_chats') ">
+                    <a href="/admin/chats" class='sidebar-link'>
+                        <i data-feather="message-circle" width="20"></i>
+                        <span>{{__("Chat")}}</span>
+                    </a>
+                </li>
                 <li class='sidebar-title'>{{__("Information")}}</li>
                 <li class="sidebar-item  has-sub @yield('info')">
                     <a href="#" class='sidebar-link'>

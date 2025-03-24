@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatsController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WebController;
 use App\Http\Controllers\WishlistController;
@@ -54,6 +55,37 @@ Route::middleware('language')->group(function () {
     Route::get('/sortBySelect', [WebController::class, 'sortBySelect']);
     Route::get('/filterPrice', [WebController::class, 'filterPrice']);
 
+    Route::get('/build', [WebController::class, 'buildPc']);
+    Route::post('/addCpu', [WebController::class, 'addCpu']);
+    Route::post('/removeCpu', [WebController::class, 'removeCpu']);
+    Route::post('/addMainboard', [WebController::class, 'addMainboard']);
+    Route::post('/removeMainboard', [WebController::class, 'removeMainboard']);
+    Route::post('/addRam', [WebController::class, 'addRam']);
+    Route::post('/removeRam', [WebController::class, 'removeRam']);
+    Route::post('/addVga', [WebController::class, 'addVga']);
+    Route::post('/removeVga', [WebController::class, 'removeVga']);
+    Route::post('/addSsd', [WebController::class, 'addSsd']);
+    Route::post('/removeSsd', [WebController::class, 'removeSsd']);
+    Route::post('/addHdd', [WebController::class, 'addHdd']);
+    Route::post('/removeHdd', [WebController::class, 'removeHdd']);
+    Route::post('/addPsu', [WebController::class, 'addPsu']);
+    Route::post('/removePsu', [WebController::class, 'removePsu']);
+    Route::post('/addCase', [WebController::class, 'addCase']);
+    Route::post('/removeCase', [WebController::class, 'removeCase']);
+    Route::post('/addFancase', [WebController::class, 'addFancase']);
+    Route::post('/removeFancase', [WebController::class, 'removeFancase']);
+    Route::post('/addScreen', [WebController::class, 'addScreen']);
+    Route::post('/removeScreen', [WebController::class, 'removeScreen']);
+    Route::post('/addMouse', [WebController::class, 'addMouse']);
+    Route::post('/removeMouse', [WebController::class, 'removeMouse']);
+    Route::post('/addKeyboard', [WebController::class, 'addKeyboard']);
+    Route::post('/removeKeyboard', [WebController::class, 'removeKeyboard']);
+    Route::post('/addHeadphone', [WebController::class, 'addHeadphone']);
+    Route::post('/removeHeadphone', [WebController::class, 'removeHeadphone']);
+    Route::post('/addSoftware', [WebController::class, 'addSoftware']);
+    Route::post('/removeSoftware', [WebController::class, 'removeSoftware']);
+    Route::post('/removeAllSession', [WebController::class, 'removeAllSession']);
+    
     //! Categories
     Route::get('/category/{id}', [WebController::class, 'category']);
     Route::get('/subcategory/{id}', [WebController::class, 'subcategory']);
@@ -92,4 +124,8 @@ Route::middleware('language')->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index']);
     Route::post('/wishlist', [WishlistController::class, 'wishlist']);
     Route::get('/count_wishlist', [WishlistController::class, 'count_wishlist']);
+
+    Route::get('/chats', [WebController::class, 'chats'])->name('user.chats');
+    Route::get('/fetch-messages', [ChatsController::class, 'fetchMessagesFromUserToAdmin'])->name('fetch.messagesFromSellerToAdmin');
+    Route::post('/send-message', [ChatsController::class, 'sendMessageFromUserToAdmin'])->name('send.Messageofsellertoadmin');
 });

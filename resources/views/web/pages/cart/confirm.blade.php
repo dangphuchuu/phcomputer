@@ -50,7 +50,7 @@
 							@if(Auth::check())
 							window.location.href = "/myOrder";
 							@else
-							window.location.href = "/";
+							window.location.href = "/trackOrder";
 							@endif
 						}, 3000);
 					},

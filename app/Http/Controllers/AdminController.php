@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chat;
 use App\Models\User;
 use App\Models\Orders;
 use Illuminate\Support\Facades\View;
@@ -66,6 +67,10 @@ class AdminController extends Controller
         }
         if (Auth::attempt(['username' => $request['username'], 'password' => $request['password']])) {
             toast(__("Login Successfully"), 'success');
+            session([
+                'LoggedAdminInfo' => Auth::user()->id,
+                'LoggedAdminName' => Auth::user()->name
+            ]);
             return redirect('admin');
         }
         return back()->with('toast_error', __("Wrong username or password. Please try again"));
@@ -432,6 +437,45 @@ class AdminController extends Controller
             'success' => __("Successfully !"),
             'chart_data' => $chart_data,
             'statistical' => $statistical
+        ]);
+    }
+    public function chats()
+    {
+        $LoggedAdminInfo = User::find(session('LoggedAdminInfo'));
+        if (!$LoggedAdminInfo) {
+            return redirect('admin/login')->with('fail', 'You must be logged in to access the dashboard');
+        }
+
+        // Fetch chats where the admin is either the sender or the receiver
+        $chats = Chat::with(['senderProfilee', 'receiverProfilee', 'senderSellerProfile', 'receiverSellerProfile'])
+            ->where('sender_id', $LoggedAdminInfo->id)
+            ->orWhere('receiver_id', $LoggedAdminInfo->id)
+            ->get();
+
+        // Combine both results and remove duplicates
+        $allChats = $chats->map(function ($chat) use ($LoggedAdminInfo) {
+            if ($chat->sender_id == $LoggedAdminInfo->id) {
+                if ($chat->receiverProfilee) {
+                    $chat->user_id = $chat->receiver_id;
+                    $chat->profile = $chat->receiverProfilee;
+                } else {
+                    $chat->user_id = $chat->receiver_id;
+                    $chat->profile = $chat->receiverSellerProfile;
+                }
+            } else {
+                if ($chat->senderProfilee) {
+                    $chat->user_id = $chat->sender_id;
+                    $chat->profile = $chat->senderProfilee;
+                } else {
+                    $chat->user_id = $chat->sender_id;
+                    $chat->profile = $chat->senderSellerProfile;
+                }
+            }
+            return $chat;
+        })->unique('user_id')->values();
+        return view('admin.pages.chats.index', [
+            'LoggedAdminInfo' => $LoggedAdminInfo,
+            'chats' => $allChats
         ]);
     }
 }

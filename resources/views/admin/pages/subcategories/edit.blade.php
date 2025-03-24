@@ -15,11 +15,13 @@
                                                 <div class="form-group">
                                                     <select name="cat_id" class="form-control form-control-primary">
                                                         @foreach($categories as $cat)
+                                                        @if(isset($sub->categories->id ))
                                                         <option 
                                                             @if($sub->categories->id == $cat->id)
                                                             selected
                                                             @endif
                                                         value="{{$cat->id}}">{{$cat->name}}</option>
+                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>

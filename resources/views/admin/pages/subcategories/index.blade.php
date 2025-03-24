@@ -44,7 +44,9 @@ active
                     <tbody>
                         @foreach($subcategories as $key => $sub)
                         <tr>
+                            @if(isset($sub->categories->name))
                             <td class="text-center">{{$sub->categories->name}}</td>
+                            @endif
                             <td class="text-center">{{$sub->name}}</td>
                             <td class="text-center" id="status{{$sub->id}}">
                                 @if($sub->status == 1)
