@@ -90,8 +90,8 @@ class PaymentController extends Controller
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         $vnp_Returnurl = $request->getSchemeAndHttpHost() . "/handle_payment?orders=" . $orders->id . "&discount=" . $request->discount;
-        $vnp_TmnCode = "SJ2TDXGL"; //Mã website tại VNPAY 
-        $vnp_HashSecret = "SSXAFWDTAAVKSVHEHWWKQLWWJSTRKBRF"; //Chuỗi bí mật
+        $vnp_TmnCode = "P24RMPW5"; //Mã website tại VNPAY 
+        $vnp_HashSecret = "CTI6LRY7BKCJ9Y8CRN8GA61FLPQ6O7ZI"; //Chuỗi bí mật
 
         $vnp_TxnRef = $orders->id; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
         $vnp_Amount = $orders->total * 100;
@@ -202,7 +202,7 @@ class PaymentController extends Controller
         $orders = Orders::find($request->orders);
         $email_cur = $orders->email;
         $name = $orders->firstname;
-        
+
         if (isset($orders->email)) {
             Mail::send('web.pages.cart.cart_mail', [
                 'name' => $name,
